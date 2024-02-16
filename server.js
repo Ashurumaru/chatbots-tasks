@@ -12,22 +12,28 @@ app.get("/static", function(_, response){
 });
 
 app.get("/dynamic", function(request, response){
+  const params = ['a', 'b', 'c'];
+  for (let i = 0; i < params.length; i++) {
+    const currentValue = parseInt(request.query[params[i]]);
+    if (isNaN(currentValue)) {
+      const errorResponse = {
+          header: "Error"
+      };
+      response.json(errorResponse);
+      return;
+    }
+  }
+
   const a = parseInt(request.query.a);
   const b = parseInt(request.query.b);
   const c = parseInt(request.query.c);
-  if (isNaN(a) || isNaN(b) || isNaN(c)) {
-    const errorResponse = {
-        header: "Error"
-    };
-    response.json(errorResponse);
-  } else {
-    const result = (a * b * c) / 3;
-    const responseData = {
-        header: "Calculated",
-        body: result
-    };
+
+  const result = (a * b * c) / 3;
+  const responseData = {
+      header: "Calculated",
+      body: result
+  };
   response.json(responseData);
-  }
 });
 
 app.listen(PORT, () => {
